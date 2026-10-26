@@ -8,12 +8,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use Illuminate\Http\Response;
 
 class LoginController extends Controller
 {
-    public function create(): View
+    public function create(): Response
     {
-        return view('auth.login');
+        // anti cache:V
+        return response()
+        ->view('auth.login')
+        ->withHeaders([
+            'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+            'Pragma' => 'no-cache',
+            'Expires' => '0',
+        ]);
     }
 
     public function store(Request $request): RedirectResponse

@@ -16,6 +16,20 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => RoleMiddleware::class,
         ]);
+        $middleware->redirectUsersTo(function (Request $request): string {
+        $user = $request->user();
+
+        if ($user->isAdmin()) {
+            return route('admin.dashboard');
+        }
+
+        if ($user->isMahasiswa()) {
+            return route('mahasiswa.dashboard');
+        }
+
+        abort(403, 'Role akun tidak dikenali.');
+    });
+
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
